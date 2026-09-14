@@ -1,0 +1,12 @@
+__pycache__/ 
+*.pyc 
+.ipynb_checkpoints/ 
+dataset/ 
+*.ipynb 
+venv/ 
+.env 
+best_skin_model.keras 
+*.keras 
+best_skin_model.keras 
+*.keras 
+skin_disease_model.tflite 
