@@ -1,6 +1,6 @@
-flask 
-flask-cors 
-numpy 
-pillow 
-opencv-python-headless 
-tensorflow 
+flask
+flask-cors
+numpy
+pillow
+opencv-python-headless
+tensorflow==2.15.0
