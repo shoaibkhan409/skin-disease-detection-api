@@ -4,4 +4,6 @@ numpy
 pillow
 opencv-python-headless
 tensorflow==2.15.0
+keras==2.15.0
 huggingface_hub
+

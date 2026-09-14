@@ -32,7 +32,7 @@ _output_details = None
 
 if os.path.exists(KERAS_PATH):
     try:
-        model_keras = tf.keras.models.load_model(KERAS_PATH)
+        model_keras = tf.keras.models.load_model(KERAS_PATH, compile=False)
         USE_KERAS = True
         print(f"[OK] Loaded Keras model: {KERAS_PATH}")
     except Exception as e:
