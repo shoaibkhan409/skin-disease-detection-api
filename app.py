@@ -4,20 +4,24 @@ import numpy as np
 from PIL import Image, ImageEnhance
 import cv2
 import os
-import urllib.request
+import shutil
+from huggingface_hub import hf_hub_download
 import tensorflow as tf
 
 app = Flask(__name__)
 CORS(app)
 
 # ── Download model from Hugging Face if not present ───────────────────────────
-KERAS_PATH  = 'best_skin_model.keras'
-MODEL_URL   = 'https://huggingface.co/shoaibb882/skin-disease-model/resolve/main/best_skin_model.keras'
+KERAS_PATH   = 'best_skin_model.keras'
+TFLITE_PATH  = 'skin_disease_model.tflite'
+HF_REPO_ID   = 'shoaibb882/skin-disease-model'
+HF_FILENAME  = 'best_skin_model.keras'
 
 if not os.path.exists(KERAS_PATH):
     print("Downloading model from Hugging Face...")
-    urllib.request.urlretrieve(MODEL_URL, KERAS_PATH)
-    print("Model downloaded successfully!")
+    downloaded_path = hf_hub_download(repo_id=HF_REPO_ID, filename=HF_FILENAME)
+    shutil.copy(downloaded_path, KERAS_PATH)
+    print(f"Model downloaded successfully! Size: {os.path.getsize(KERAS_PATH) / (1024*1024):.1f} MB")
 
 # ── Load model: Try best_skin_model.keras first, fallback to tflite ───────────
 USE_KERAS = False
@@ -25,9 +29,6 @@ model_keras = None
 interpreter = None
 _input_details = None
 _output_details = None
-
-KERAS_PATH  = 'best_skin_model.keras'
-TFLITE_PATH = 'skin_disease_model.tflite'
 
 if os.path.exists(KERAS_PATH):
     try:
@@ -220,6 +221,7 @@ def health():
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
     print("=" * 60)
     print("  DermaScan AI Server")
     print("=" * 60)
@@ -228,4 +230,5 @@ if __name__ == '__main__':
     print(f"  Skin thresh : {MIN_SKIN_RATIO * 100:.0f}%")
     print(f"  Conf thresh : {MIN_CONFIDENCE_THRESHOLD:.0f}%")
     print("=" * 60)
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
+
